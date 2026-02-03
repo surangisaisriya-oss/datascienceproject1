@@ -1,0 +1,30 @@
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv("data/processed/cleaned_data.csv", parse_dates=["Date"])
+
+# Net inflow
+df["Net_Daily_Inflow"] = (
+    df["Children apprehended and placed in CBP custody*"]
+    - df["Children discharged from HHS Care"]
+)
+
+# HHS load change
+df["HHS_Net_Load_Change"] = (
+    df["Children transferred out of CBP custody"]
+    - df["Children discharged from HHS Care"]
+)
+
+# Rolling averages
+df["7Day_Avg_Intake"] = (
+    df["Children apprehended and placed in CBP custody*"]
+    .rolling(7)
+    .mean()
+)
+
+# Overload threshold
+threshold = df["Children in HHS Care"].quantile(0.85)
+df["Overload_Flag"] = (df["Children in HHS Care"] > threshold).astype(int)
+
+df.to_csv("data/processed/features.csv", index=False)
+print("✅ Features created")
