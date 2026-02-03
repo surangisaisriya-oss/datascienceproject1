@@ -1,0 +1,16 @@
+from prophet import Prophet
+import pandas as pd
+
+df = pd.read_csv("data/processed/cleaned_data.csv")
+
+prophet_df = df[["Date", "Children apprehended and placed in CBP custody*"]]
+prophet_df.columns = ["ds", "y"]
+
+model = Prophet()
+model.fit(prophet_df)
+
+future = model.make_future_dataframe(periods=14)
+forecast = model.predict(future)
+
+model.plot(forecast)
+model.plot_components(forecast)
