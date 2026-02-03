@@ -1,0 +1,18 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("data/processed/features.csv", parse_dates=["Date"])
+
+plt.figure()
+plt.plot(df["Date"], df["Children in HHS Care"])
+plt.title("Children in HHS Care Over Time")
+plt.xlabel("Date")
+plt.ylabel("Children Count")
+plt.show()
+
+plt.figure()
+plt.plot(df["Date"], df["Children apprehended and placed in CBP custody*"], label="Intake")
+plt.plot(df["Date"], df["Children discharged from HHS Care"], label="Discharge")
+plt.legend()
+plt.title("Intake vs Discharge")
+plt.show()
